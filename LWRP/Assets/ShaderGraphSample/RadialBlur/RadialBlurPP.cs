@@ -5,7 +5,7 @@ using UnityEngine.Rendering.PostProcessing;
 using System;
 
 [Serializable]
-[PostProcess(typeof(RadialBlurPPRenderer), PostProcessEvent.BeforeStack, "Custom/RadialBlur")]
+[PostProcess(typeof(RadialBlurPPRenderer), PostProcessEvent.BeforeStack, "Chris/RadialBlur")]
 public class RadialBlurPP : PostProcessEffectSettings
 {
     public Vector2Parameter m_Center = new Vector2Parameter { value = new Vector2(0.5f, 0.5f) };
@@ -19,17 +19,17 @@ public class RadialBlurPP : PostProcessEffectSettings
 
 public sealed class RadialBlurPPRenderer : PostProcessEffectRenderer<RadialBlurPP>
 {
-    Shader m_MyShader = Shader.Find("Chris/RadialBlur2");
+    Shader m_MyShader = Shader.Find("Chris/RadialBlur");
 
     public override void Render(PostProcessRenderContext iContext)
     {
         if (m_MyShader == null)
             return;
 
-        var _Sheet = iContext.propertySheets.Get(m_MyShader);//Shader.Find("Chris/RadialBlur"));
+        var _Sheet = iContext.propertySheets.Get(m_MyShader);
         _Sheet.properties.SetVector("_Center", new Vector4(settings.m_Center.value.x, settings.m_Center.value.y, 0.0f, 0.0f));
-        _Sheet.properties.SetFloat("_Dist", settings.m_Dist);
-        _Sheet.properties.SetFloat("_Strength", settings.m_Strength);
+        _Sheet.properties.SetFloat("_SampleDist", settings.m_Dist);
+        _Sheet.properties.SetFloat("_SampleStrength", settings.m_Strength);
         iContext.command.BlitFullscreenTriangle(iContext.source, iContext.destination, _Sheet, 0);
     }
 }
